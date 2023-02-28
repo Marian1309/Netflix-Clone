@@ -1,20 +1,71 @@
-// import { PrismaAdapter } from '@next-auth/prisma-adapter'
-// import NextAuth from 'next-auth'
-// import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { compare } from 'bcrypt'
+import NextAuth from 'next-auth'
+import Credentials from 'next-auth/providers/credentials'
+import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 
-// import prisma from '@prisma'
+import prisma from '@prisma'
 
-// export const authOptions = {
-//   adapter: PrismaAdapter(prisma),
-//   secret: process.env.AUTH_SECRET,
-//   providers: [
-//     GoogleProvider({
-//       clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
-//       clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!
-//     })
-//   ]
-// }
+export default NextAuth({
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID || '',
+      clientSecret: process.env.GITHUB_SECRET || ''
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || ''
+    }),
+    Credentials({
+      id: 'credentials',
+      name: 'Credentials',
+      credentials: {
+        email: {
+          label: 'Email',
+          type: 'text'
+        },
+        password: {
+          label: 'Password',
+          type: 'passord'
+        }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Email and password required')
+        }
 
-// export default NextAuth(authOptions)
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email
+          }
+        })
 
-export {}
+        if (!user || !user.hashedPassword) {
+          throw new Error('Email does not exist')
+        }
+
+        const isCorrectPassword = await compare(
+          credentials.password,
+          user.hashedPassword
+        )
+
+        if (!isCorrectPassword) {
+          throw new Error('Incorrect password')
+        }
+
+        return user
+      }
+    })
+  ],
+  pages: {
+    signIn: '/auth'
+  },
+  debug: process.env.NODE_ENV === 'development',
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: 'jwt' },
+  jwt: {
+    secret: process.env.NEXTAUTH_JWT_SECRET
+  },
+  secret: process.env.NEXTAUTH_SECRET
+})

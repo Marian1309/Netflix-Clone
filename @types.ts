@@ -11,3 +11,5 @@ export interface FormFields {
   type: 'text' | 'password' | 'email'
   ban?: boolean
 }
+
+export type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH'
