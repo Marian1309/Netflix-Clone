@@ -24,7 +24,8 @@
       "@components": ["./components"],
       "@utils": ["./utils"],
       "@api/*": ["./pages/api/*"],
-      "@prisma": ["./prisma/client.ts"]
+      "@prisma": ["./prisma/client.ts"],
+      "@types": ["./@types.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

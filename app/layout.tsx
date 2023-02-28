@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' data-theme='halloween'>
+    <html lang='en'>
       <body className={jetbrains.className}>
         <GlobalWrapper>{children}</GlobalWrapper>
       </body>

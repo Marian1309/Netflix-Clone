@@ -72,7 +72,8 @@
     "no-console": "off",
     "@typescript-eslint/no-non-null-assertion": "Off",
     "react/prop-types": "off",
-    "react/jsx-sort-props": "off"
+    "react/jsx-sort-props": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "react": {
