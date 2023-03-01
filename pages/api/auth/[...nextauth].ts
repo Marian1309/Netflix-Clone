@@ -7,7 +7,7 @@ import GoogleProvider from 'next-auth/providers/google'
 
 import prisma from '@prisma'
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || '',
@@ -23,11 +23,11 @@ export default NextAuth({
       credentials: {
         email: {
           label: 'Email',
-          type: 'text'
+          type: 'email'
         },
         password: {
           label: 'Password',
-          type: 'passord'
+          type: 'password'
         }
       },
       async authorize(credentials) {
@@ -61,11 +61,11 @@ export default NextAuth({
   pages: {
     signIn: '/auth'
   },
-  debug: process.env.NODE_ENV === 'development',
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt' },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET
   },
   secret: process.env.NEXTAUTH_SECRET
-})
+}
+
+export default NextAuth(authOptions)

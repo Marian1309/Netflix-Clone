@@ -3,11 +3,15 @@
 import axios from 'axios'
 import { signIn } from 'next-auth/react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { ChangeEvent, useCallback, useState } from 'react'
+import { FaGithub } from 'react-icons/fa'
+import { FcGoogle } from 'react-icons/fc'
 import { TypeAnimation } from 'react-type-animation'
 
 import { Input } from '@components'
+
+import { ToastError } from '@utils'
 
 import { FormFields, UserFormFields } from '@types'
 
@@ -21,6 +25,7 @@ export default function AuthPage() {
   const [formFields, setFormFields] =
     useState<UserFormFields>(DEFAULT_FORM_FIELDS)
   const [authVariant, setAuthVariant] = useState<'login' | 'register'>('login')
+
   const router = useRouter()
 
   const { userName, email, password } = formFields
@@ -68,7 +73,7 @@ export default function AuthPage() {
       router.push('/')
       setFormFields(DEFAULT_FORM_FIELDS)
     } catch (err: any) {
-      console.log(err.message)
+      ToastError(err.message)
     }
   }, [email, password, userName, router])
 
@@ -83,7 +88,7 @@ export default function AuthPage() {
       router.push('/')
       setFormFields(DEFAULT_FORM_FIELDS)
     } catch (err: any) {
-      console.log(err.message)
+      ToastError(err.message)
     }
   }, [email, password, router])
 
@@ -99,6 +104,7 @@ export default function AuthPage() {
             <TypeAnimation
               sequence={[authVariant ? 'Sign In' : 'Sign Up']}
               className='mb-8 text-3xl font-semibold text-white'
+              speed={1}
               repeat={1}
             />
             <div className='flex flex-col gap-4 text-[12px]'>
@@ -135,6 +141,23 @@ export default function AuthPage() {
             >
               {authVariant === 'login' ? 'Login' : 'Sign Up'}
             </button>
+
+            <div className='mt-8 flex flex-row items-center justify-center gap-4 '>
+              <div className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white transition hover:opacity-80'>
+                <FcGoogle
+                  size={30}
+                  onClick={() => signIn('google', { callbackUrl: '/' })}
+                />
+              </div>
+
+              <div className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-black  transition hover:opacity-80'>
+                <FaGithub
+                  onClick={() => signIn('github', { callbackUrl: '/' })}
+                  size={35}
+                />
+              </div>
+            </div>
+
             <p className='mt-12 text-[8px] text-neutral-500 selection:hidden'>
               {authVariant === 'login'
                 ? 'First time using Netflix?'

@@ -13,7 +13,6 @@ export default async function handler(
 ) {
   if ((req.method as HttpMethod) === 'POST') {
     try {
-      console.log(req.body)
       const { email, name, password } = req.body
 
       const existedUser = await prisma.user.findUnique({

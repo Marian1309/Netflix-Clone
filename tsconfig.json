@@ -21,13 +21,21 @@
       "@fonts": ["./public/fonts"],
       "@icons": ["./public/icons"],
       "@store": ["./context/store.ts"],
+      "@slices/*": ["./context/slices/*"],
       "@components": ["./components"],
       "@utils": ["./utils"],
       "@api/*": ["./pages/api/*"],
       "@prisma": ["./prisma/client.ts"],
-      "@types": ["./@types.ts"]
+      "@types": ["./@types.ts"],
+      "@hooks": ["./hooks"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "context/slices/authtSlicets"
+  ],
   "exclude": ["node_modules"]
 }
